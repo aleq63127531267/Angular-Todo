@@ -1,0 +1,65 @@
+<div class="container border mt-3" style="max-width: 900px">
+  <label class="mt-2 fs-4" type="text">
+    Add your todo
+  </label>
+  <div class="input-group mt-3 mb-2">
+    <input (keyup.enter)="onAdd()"
+           [(ngModel)]="inputValue"
+           type="text"
+           class="form-control">
+    <button (click)="onAdd()"
+            class="btn btn-outline-secondary"
+            type="button">Add
+    </button>
+  </div>
+  <div class="mb-2">
+    <input type="checkbox"
+           [(ngModel)]="ongoingDeleting"
+           (click)="onToggle()"
+           class="btn-check"
+           id="btncheck1"
+           autocomplete="off"
+           [disabled]="ongoingEditing">
+    <label class="btn btn-outline-danger"
+           for="btncheck1">Toggle Delete</label>
+
+    <button *ngIf="ongoingDeleting"
+            (click)="onMultiDelete()"
+            type="button"
+            class="btn btn-danger ms-2">Delete Selected Items</button>
+  </div>
+  <ul class="list-group mb-3">
+    <li *ngFor="let item of todos; let i = index"
+        class="list-group-item d-flex justify-content-between"
+        [ngClass]="{'bg-success-subtle': item.completed, 'bg-info-subtle': item.isEditing}">
+      <div class="w-75">
+        <input class="form-check-input me-1"
+               type="checkbox"
+               [(ngModel)]="item.completed"
+               id="firstCheckbox"
+               (change)="onCheck(i)">
+        <input #editinput
+               [ngClass]="{'is-readonly': !item.isEditing, 'bg-success-subtle': item.completed && !item.isEditing, 'text-decoration-line-through': item.completed}"
+               (keyup.enter)="onSave(i, editinput.value)"
+               (keyup.escape)="onCancel(i)"
+               class="border-0"
+               style="width: 95%"
+               [style]="'user-select: none !important;'"
+               [readonly]="!item.isEditing"
+               [value]="item.description"/>
+      </div>
+      <div *ngIf="!item.isEditing && !ongoingDeleting">
+        <i class="bi bi-pencil-square d-inline-block me-2" (click)="onEdit(i); editinput.focus()"></i>
+        <i class="bi bi-trash" (click)="onDelete(i)"></i>
+      </div>
+      <div *ngIf="item.isEditing && !ongoingDeleting">
+        <i class="bi bi-x me-2" (click)="onCancel(i)"></i>
+        <i class="bi-floppy" (click)="onSave(i, editinput.value)"></i>
+      </div>
+      <div *ngIf="ongoingDeleting">
+        <input [(ngModel)]="item.isDeleting"
+               type="checkbox">
+      </div>
+    </li>
+  </ul>
+</div>
