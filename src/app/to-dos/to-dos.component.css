@@ -1,3 +1,13 @@
 .is-readonly {
   outline: none;
 }
+
+.actions-wrapper{
+  position: relative;
+}
+
+.select-all{
+  position: absolute;
+  right: 17px;
+  top: 15px;
+}

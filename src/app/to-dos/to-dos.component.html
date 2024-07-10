@@ -6,13 +6,15 @@
     <input (keyup.enter)="onAdd()"
            [(ngModel)]="inputValue"
            type="text"
-           class="form-control">
+           class="form-control"
+           [disabled]="ongoingEditing || ongoingDeleting">
     <button (click)="onAdd()"
             class="btn btn-outline-secondary"
-            type="button">Add
+            type="button"
+            [disabled]="ongoingDeleting || ongoingEditing">Add
     </button>
   </div>
-  <div class="mb-2">
+  <div class="mb-2 d-flex actions-wrapper" >
     <input type="checkbox"
            [(ngModel)]="ongoingDeleting"
            (click)="onToggle()"
@@ -21,12 +23,18 @@
            autocomplete="off"
            [disabled]="ongoingEditing">
     <label class="btn btn-outline-danger"
-           for="btncheck1">Toggle Delete</label>
+           for="btncheck1">Multi-Delete</label>
 
     <button *ngIf="ongoingDeleting"
             (click)="onMultiDelete()"
             type="button"
             class="btn btn-danger ms-2">Delete Selected Items</button>
+
+    <input *ngIf="ongoingDeleting"
+           type="checkbox"
+           class="select-all"
+           [(ngModel)]="isDeleteAll"
+           (change)="onSelect()">
   </div>
   <ul class="list-group mb-3">
     <li *ngFor="let item of todos; let i = index"
@@ -58,7 +66,7 @@
       </div>
       <div *ngIf="ongoingDeleting">
         <input [(ngModel)]="item.isDeleting"
-               type="checkbox">
+               type="checkbox" >
       </div>
     </li>
   </ul>

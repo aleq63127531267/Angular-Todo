@@ -35,24 +35,7 @@ export class TodoService {
 
   multidelete(indexes: number[]){
     let list = JSON.parse(localStorage.getItem('todos') ?? '[]')
-    let sorted = 0
-    for(;sorted == false;){
-      let index = 0
-      for(let i = index; ;){
-
-      }
-      // for(let i = 0; i < indexes.length; i++){
-      //   sorted = true
-      //   let x = i++
-      //   if(indexes[i] > indexes[x]){
-      //     sorted = false
-      //     let n = indexes[i]
-      //     indexes[i] = indexes[x]
-      //     indexes[x] = n
-      //   }
-      // }
-    }
-    for(let i = 0; i < indexes.length ;i++){
+    for(let i of indexes){
       list.splice(i, 1)
     }
     localStorage.setItem('todos', JSON.stringify(list))

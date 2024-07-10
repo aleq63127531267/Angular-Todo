@@ -18,6 +18,7 @@ export class ToDosComponent {
   ongoingEditing: boolean = false;
   ongoingDeleting: boolean = false;
   deleting: number[] = [];
+  isDeleteAll = false;
 
 
   constructor(private todoService: TodoService) {
@@ -42,7 +43,7 @@ export class ToDosComponent {
   }
 
   onSave(index: number, value: string) {
-    if(value){
+    if (value) {
       this.todos[index].description = value
       this.todos[index].isEditing = false
       this.ongoingEditing = false
@@ -70,20 +71,39 @@ export class ToDosComponent {
   }
 
   onToggle() {
-    for(let i in this.todos) {
+    for (let i in this.todos) {
       this.todos[i].isDeleting = false
     }
+    this.isDeleteAll = false
   }
 
   onMultiDelete() {
-    for(let index in this.todos){
-      if(this.todos[+index].isDeleting){
+    for (let index in this.todos) {
+      if (this.todos[+index].isDeleting) {
         this.deleting.unshift(+index)
       }
     }
-    this.todoService.multidelete(this.deleting)
-    this.todos = this.todoService.getAll()
-    this.ongoingDeleting = false
+    let tasks = this.deleting.length
+    if (tasks) {
+      if (confirm("Are you sure you want to delete " + tasks + " tasks?")) {
+        this.todoService.multidelete(this.deleting)
+        this.todos = this.todoService.getAll()
+        this.ongoingDeleting = false
+      }
+    }
+    this.deleting = []
   }
 
+  onSelect() {
+    if (this.isDeleteAll) {
+      for (let i in this.todos) {
+        this.todos[i].isDeleting = true
+      }
+    }
+    if (!this.isDeleteAll) {
+      for (let i in this.todos) {
+        this.todos[i].isDeleting = false
+      }
+    }
+  }
 }
